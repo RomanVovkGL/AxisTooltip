@@ -30,21 +30,25 @@ public extension View {
     func axisToolTip<F: View>(isPresented: Binding<Bool>,
                      alignment: Alignment = .center,
                      constant: ATConstant = .init(),
+                     coordinateSpace: CoordinateSpace = .global,
                      @ViewBuilder foreground: @escaping () -> F) -> some View {
         self.modifier(AxisTooltip(isPresented: isPresented,
                                           alignment: alignment,
                                           constant: constant,
+                                          coordinateSpace: coordinateSpace,
                                           foreground: foreground))
     }
     
     func axisToolTip<B: View, F: View>(isPresented: Binding<Bool>,
                      alignment: Alignment = .center,
                      constant: ATConstant = .init(),
+                     coordinateSpace: CoordinateSpace = .global,
                      @ViewBuilder background: @escaping () -> B,
                      @ViewBuilder foreground: @escaping () -> F) -> some View {
         self.modifier(AxisTooltip(isPresented: isPresented,
                                           alignment: alignment,
                                           constant: constant,
+                                          coordinateSpace: coordinateSpace,
                                           background: background,
                                           foreground: foreground))
     }

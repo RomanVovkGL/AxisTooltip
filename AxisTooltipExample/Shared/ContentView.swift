@@ -28,7 +28,7 @@ struct ContentView: View {
                     .onTapGesture {
                         isPresented.toggle()
                     }
-                    .axisToolTip(isPresented: $isPresented, alignment: alignments[alignmentIndex], constant: constant, foreground: {
+                    .axisToolTip(isPresented: $isPresented, alignment: alignments[alignmentIndex], constant: constant, coordinateSpace: .global, foreground: {
                         Label("Contrary to popular belief, Lorem Ipsum is not simply random text.", systemImage: "heart")
                             .padding()
                             .frame(width: 200)
