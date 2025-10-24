@@ -44,6 +44,8 @@ public struct AxisTooltip<B, F>: ViewModifier where B: View, F: View {
     /// The background view of the tooltip.
     public var background: (() -> B)? = nil
     
+    public var coordinateSpace: CoordinateSpace
+    
     /// The content view of the tooltip.
     public var foreground: () -> F
     
@@ -51,16 +53,16 @@ public struct AxisTooltip<B, F>: ViewModifier where B: View, F: View {
         GeometryReader { parentProxy in
             ZStack(alignment: alignment) {
                 Color.clear
-                    .takeFrame($parentRect)
+                    .takeFrame($parentRect, in: coordinateSpace)
                 content
-                    .takeFrame($targetRect)
+                    .takeFrame($targetRect, in: coordinateSpace)
                     .overlay(
                         GeometryReader { proxy in
                             ZStack {
                                 if isPresented {
                                     foreground()
                                         .fixedSize()
-                                        .takeFrame($tooltipRect)
+                                        .takeFrame($tooltipRect, in: coordinateSpace)
                                         .background(backgroundView)
                                         .overlay(
                                             ZStack {
@@ -188,9 +190,11 @@ public extension AxisTooltip where B == EmptyView, F : View {
     init(isPresented: Binding<Bool>,
          alignment: Alignment = .center,
          constant: ATConstant = .init(),
+         coordinateSpace: CoordinateSpace = .global,
          @ViewBuilder foreground: @escaping () -> F) {
         _isPresented = isPresented
         self.alignment = alignment
+        self.coordinateSpace = coordinateSpace
         self.constant = constant
         self.foreground = foreground
     }
@@ -208,10 +212,12 @@ public extension AxisTooltip where B : View, F : View {
     init(isPresented: Binding<Bool>,
          alignment: Alignment = .center,
          constant: ATConstant = .init(),
+         coordinateSpace: CoordinateSpace = .global,
          @ViewBuilder background: @escaping () -> B,
          @ViewBuilder foreground: @escaping () -> F) {
         _isPresented = isPresented
         self.alignment = alignment
+        self.coordinateSpace = coordinateSpace
         self.constant = constant
         self.background = background
         self.foreground = foreground

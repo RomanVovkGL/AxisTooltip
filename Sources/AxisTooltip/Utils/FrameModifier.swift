@@ -28,16 +28,18 @@ import SwiftUI
 struct FrameModifier: ViewModifier {
     
     @Binding var rect: CGRect
+    var coordinateSpace: CoordinateSpace
     
-    init(_ rect: Binding<CGRect>) {
+    init(_ rect: Binding<CGRect>, in coordinateSpace: CoordinateSpace = .global) {
         _rect = rect
+        self.coordinateSpace = coordinateSpace
     }
     
     func body(content: Content) -> some View {
         content
             .background(
                 GeometryReader { proxy in
-                    Color.clear.preference(key: FramePreferenceKey.self, value: proxy.frame(in: .global))
+                    Color.clear.preference(key: FramePreferenceKey.self, value: proxy.frame(in: coordinateSpace))
                 }
             )
             .onPreferenceChange(FramePreferenceKey.self) { preference in
@@ -47,8 +49,8 @@ struct FrameModifier: ViewModifier {
 }
 
 extension View {
-    func takeFrame(_ rect: Binding<CGRect>) -> some View {
-        self.modifier(FrameModifier(rect))
+    func takeFrame(_ rect: Binding<CGRect>, in coordinateSpace: CoordinateSpace = .global) -> some View {
+        self.modifier(FrameModifier(rect, in: coordinateSpace))
     }
 }
 
